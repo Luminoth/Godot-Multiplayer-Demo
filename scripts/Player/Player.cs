@@ -5,6 +5,8 @@ public partial class Player : CharacterBody3D
     [Export]
     private float _speed = 5.0f;
 
+    #region Godot Lifecycle
+
     public override void _PhysicsProcess(double delta)
     {
         var input = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
@@ -12,4 +14,6 @@ public partial class Player : CharacterBody3D
 
         MoveAndSlide();
     }
+
+    #endregion
 }

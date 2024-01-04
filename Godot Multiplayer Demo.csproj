@@ -6,4 +6,10 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <RootNamespace>GodotMultiplayerDemo</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="GameLiftServerSDK">
+      <HintPath>GameLiftServerSDK.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>
