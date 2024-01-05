@@ -14,5 +14,12 @@
     <Reference Include="log4net">
       <HintPath>log4net.dll</HintPath>
     </Reference>
+    <Reference Include="websocket-sharp-core">
+      <HintPath>websocket-sharp-core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
 </Project>

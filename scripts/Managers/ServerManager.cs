@@ -36,6 +36,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
         var initSDKOutcome = GameLiftServerAPI.InitSDK();
         if(initSDKOutcome.Success) {
+            _isGameLiftServer = true;
+
             var processParameters = new ProcessParameters(
                 // OnStartGameSession
                 (GameSession gameSession) => {
@@ -86,6 +88,9 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     public void StopServer()
     {
-        GameLiftServerAPI.Destroy();
+        if(_isGameLiftServer) {
+            GameLiftServerAPI.Destroy();
+            _isGameLiftServer = false;
+        }
     }
 }
