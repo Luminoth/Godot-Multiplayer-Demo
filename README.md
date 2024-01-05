@@ -8,5 +8,8 @@
   * This doesn't actually seem to work
 * msbuild GameLiftServerSDK.csproj /restore
 * msbuild GameLiftServerSDK.csproj /property:Configuration=Release
-* Copy bin/Release/net462/GameLiftServerSDK.dll to Godot project
-  * Add GameLiftServerSDK ItemGroup to .csproj
+* Copy dependencies to Godot project
+  * bin/Release/net462/GameLiftServerSDK.dll
+  * bin/Release/net462/log4net.dll
+  * bin/Release/net462/log4net.config
+  * Add ItemGroup with GameLiftServerSDK, log4net, and log4netconfig to .csproj

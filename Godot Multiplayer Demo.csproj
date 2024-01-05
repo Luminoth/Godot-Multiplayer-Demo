@@ -11,5 +11,11 @@
     <Reference Include="GameLiftServerSDK">
       <HintPath>GameLiftServerSDK.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="log4netconfig">
+      <HintPath>log4net.config</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

@@ -10,6 +10,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
     [Export]
     private int _listeningPort = 7777;
 
+    private bool _isGameLiftServer;
+
     #region Godot Lifecycle
 
     public override void _ExitTree()
@@ -19,7 +21,16 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #endregion
 
-    public bool StartServer()
+    public bool StartServer(bool gamelift)
+    {
+        if(gamelift) {
+            return StartGameLiftServer();
+        } else {
+            return StartLocalServer();
+        }
+    }
+
+    private bool StartGameLiftServer()
     {
         var initSDKOutcome = GameLiftServerAPI.InitSDK();
         if(initSDKOutcome.Success) {
@@ -62,6 +73,11 @@ public partial class ServerManager : SingletonNode<ServerManager>
             GD.PushError("InitSDK failure : " + initSDKOutcome.Error.ToString());
             return false;
         }
+    }
+
+    private bool StartLocalServer()
+    {
+        return false;
     }
 
     public void StopServer()
