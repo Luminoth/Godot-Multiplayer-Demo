@@ -16,10 +16,6 @@ public partial class Boot : Node
         if(args.Contains("--dedicated")) {
             GD.Print("Starting dedicated server ...");
 
-            if(!OS.HasFeature("dedicated_server")) {
-                GD.PushWarning("Dedicated servers should be run with the dedicated server feature");
-            }
-
             var scene = _dedicatedScene.Instantiate();
             GetTree().Root.AddChild(scene);
         } else {

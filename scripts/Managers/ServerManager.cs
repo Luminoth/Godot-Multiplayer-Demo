@@ -21,9 +21,9 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #endregion
 
-    public bool StartServer(bool gamelift)
+    public bool StartServer(bool useGameLift)
     {
-        if(gamelift) {
+        if(useGameLift) {
             return StartGameLiftServer();
         } else {
             return StartLocalServer();
@@ -32,6 +32,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     private bool StartGameLiftServer()
     {
+        GD.Print("Starting GameLift server ...");
+
         var initSDKOutcome = GameLiftServerAPI.InitSDK();
         if(initSDKOutcome.Success) {
             var processParameters = new ProcessParameters(
@@ -77,6 +79,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     private bool StartLocalServer()
     {
+        GD.Print("Starting local server ...");
+
         return false;
     }
 
