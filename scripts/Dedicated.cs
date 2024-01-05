@@ -11,6 +11,6 @@ public partial class Dedicated : Node
         }
 
         bool useGameLift = OS.GetCmdlineArgs().Contains("--gamelift");
-        ServerManager.Instance.StartServer(useGameLift);
+        ServerManager.Instance.StartDedicatedServer(useGameLift);
     }
 }

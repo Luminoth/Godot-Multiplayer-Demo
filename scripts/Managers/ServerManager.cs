@@ -10,6 +10,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
     [Export]
     private int _listeningPort = 7777;
 
+    public int ListenPort => _listeningPort;
+
     private bool _isGameLiftServer;
 
     #region Godot Lifecycle
@@ -21,8 +23,10 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #endregion
 
-    public bool StartServer(bool useGameLift)
+    public bool StartDedicatedServer(bool useGameLift)
     {
+        GD.Print("Starting dedicated server ...");
+
         if(useGameLift) {
             return StartGameLiftServer();
         } else {
@@ -79,7 +83,7 @@ public partial class ServerManager : SingletonNode<ServerManager>
         }
     }
 
-    private bool StartLocalServer()
+    public bool StartLocalServer()
     {
         GD.Print("Starting local server ...");
 
