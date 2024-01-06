@@ -12,6 +12,9 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     public int ListenPort => _listeningPort;
 
+    [Export]
+    private int _maxPlayers = 4;
+
     private bool _isGameLiftServer;
 
     #region Godot Lifecycle
@@ -46,6 +49,10 @@ public partial class ServerManager : SingletonNode<ServerManager>
                 // OnStartGameSession
                 (GameSession gameSession) => {
                     GD.Print("OnStartGameSession");
+
+                    // TODO: what if this fails?
+                    StartLocalServer();
+
                     GameLiftServerAPI.ActivateGameSession();
                 },
                 // OnUpdateGameSession
@@ -55,7 +62,10 @@ public partial class ServerManager : SingletonNode<ServerManager>
                 // OnProcessTerminate
                 () => {
                     GD.Print("OnProcessTerminate");
+
                     GameLiftServerAPI.ProcessEnding();
+
+                    EngineManager.Instance.Quit();
                 },
                 // OnHealthCheck
                 () => {
@@ -85,13 +95,25 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     public bool StartLocalServer()
     {
-        GD.Print("Starting local server ...");
+        GD.Print($"Starting local server on {ListenPort} ...");
 
-        return false;
+        var peer = new ENetMultiplayerPeer();
+
+        var result = peer.CreateServer(ListenPort, _maxPlayers);
+        if(result != Error.Ok) {
+            GD.PrintErr($"Failed to create server: {result}");
+            return false;
+        }
+
+        Multiplayer.MultiplayerPeer = peer;
+
+        return true;
     }
 
     public void StopServer()
     {
+        Multiplayer.MultiplayerPeer = null;
+
         if(_isGameLiftServer) {
             GameLiftServerAPI.Destroy();
             _isGameLiftServer = false;

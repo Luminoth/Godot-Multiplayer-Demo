@@ -4,14 +4,17 @@ using System;
 
 public partial class JoinMenu : Node
 {
+    [Export]
+    private PackedScene _levelScene;
+
     private LineEdit _addressInput;
 
-    public string DefaultAddress => $"127.0.0.1:{ServerManager.Instance.ListenPort}";
+
 
     public override void _Ready()
     {
         _addressInput = GetNode<LineEdit>("VBoxContainer/HBoxContainer/LineEdit");
-        _addressInput.PlaceholderText = DefaultAddress;
+        _addressInput.PlaceholderText = EngineManager.Instance.DefaultAddress;
     }
 
     #region Signals
@@ -20,10 +23,18 @@ public partial class JoinMenu : Node
     {
         var address = _addressInput.Text;
         if(string.IsNullOrWhiteSpace(address)) {
-            address = DefaultAddress;
+            address = EngineManager.Instance.DefaultAddress;
         }
 
-        GD.Print($"Joining game session at {address} ...");
+        if(!ClientManager.Instance.JoinGameSession(address)) {
+            GD.PushError("Failed to start game client");
+            return;
+        }
+
+        var scene = _levelScene.Instantiate();
+        GetTree().Root.AddChild(scene);
+
+        QueueFree();
     }
 
     #endregion

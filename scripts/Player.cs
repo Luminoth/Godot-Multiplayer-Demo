@@ -7,6 +7,11 @@ public partial class Player : CharacterBody3D
 
     #region Godot Lifecycle
 
+    public override void _Ready()
+    {
+        GD.Print("Player ready!");
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         var input = Input.GetVector("move_left", "move_right", "move_forward", "move_back");

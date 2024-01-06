@@ -1,7 +1,5 @@
 using Godot;
 
-using System;
-
 public partial class MainMenu : Node
 {
     [Export]
@@ -18,6 +16,11 @@ public partial class MainMenu : Node
 
         if(!ServerManager.Instance.StartLocalServer()) {
             GD.PushError("Failed to start local game server");
+            return;
+        }
+
+        if(!ClientManager.Instance.JoinLocalGameSession()) {
+            GD.PushError("Failed to start game client");
             return;
         }
 
