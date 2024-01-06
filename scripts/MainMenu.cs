@@ -1,5 +1,7 @@
 using Godot;
 
+using System;
+
 public partial class MainMenu : Node
 {
     [Export]
@@ -15,19 +17,13 @@ public partial class MainMenu : Node
         GD.Print("Creating game session ...");
 
         if(!ServerManager.Instance.StartLocalServer()) {
-            GD.PushError("Failed to start local game server");
+            GD.PrintErr("Failed to start local game server");
             return;
         }
 
-        if(!ClientManager.Instance.JoinLocalGameSession()) {
-            GD.PushError("Failed to start game client");
-            return;
-        }
-
-        var scene = _levelScene.Instantiate();
-        GetTree().Root.AddChild(scene);
-
-        QueueFree();
+        ClientManager.Instance.ConnectedToServer += OnConnectedToServer;
+        ClientManager.Instance.ConnectionFailed += OnConnectionFailed;
+        ClientManager.Instance.BeginJoinLocalGameSession();
     }
 
     private void _on_join_pressed()
@@ -36,6 +32,31 @@ public partial class MainMenu : Node
         GetTree().Root.AddChild(scene);
 
         QueueFree();
+    }
+
+    #endregion
+
+    #region Event Handlers
+
+    private void OnConnectedToServer(object sender, EventArgs e)
+    {
+        ClientManager.Instance.ConnectedToServer -= OnConnectedToServer;
+        ClientManager.Instance.ConnectionFailed -= OnConnectionFailed;
+
+        GD.Print("Connected to server!");
+
+        var scene = _levelScene.Instantiate();
+        GetTree().Root.AddChild(scene);
+
+        QueueFree();
+    }
+
+    private void OnConnectionFailed(object sender, EventArgs e)
+    {
+        ClientManager.Instance.ConnectedToServer -= OnConnectedToServer;
+        ClientManager.Instance.ConnectionFailed -= OnConnectionFailed;
+
+        GD.PrintErr($"Failed to connect to server!");
     }
 
     #endregion

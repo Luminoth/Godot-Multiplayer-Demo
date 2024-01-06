@@ -1,5 +1,6 @@
 using Godot;
 
+using System;
 using System.Collections.Generic;
 
 using Aws.GameLift.Server;
@@ -7,6 +8,13 @@ using Aws.GameLift.Server.Model;
 
 public partial class ServerManager : SingletonNode<ServerManager>
 {
+    #region Events
+
+    public event EventHandler PeerConnected;
+    public event EventHandler PeerDisconnected;
+
+    #endregion
+
     [Export]
     private int _listeningPort = 7777;
 
@@ -19,8 +27,17 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #region Godot Lifecycle
 
+    public override void _Ready()
+    {
+        Multiplayer.PeerConnected += OnPeerConnected;
+        Multiplayer.PeerDisconnected += OnPeerDisconnected;
+    }
+
     public override void _ExitTree()
     {
+        Multiplayer.PeerConnected -= OnPeerConnected;
+        Multiplayer.PeerDisconnected -= OnPeerDisconnected;
+
         StopServer();
     }
 
@@ -88,7 +105,7 @@ public partial class ServerManager : SingletonNode<ServerManager>
                 return false;
             }
         } else {
-            GD.PushError("InitSDK failure : " + initSDKOutcome.Error.ToString());
+            GD.PrintErr("InitSDK failure : " + initSDKOutcome.Error.ToString());
             return false;
         }
     }
@@ -119,4 +136,20 @@ public partial class ServerManager : SingletonNode<ServerManager>
             _isGameLiftServer = false;
         }
     }
+
+    #region Event Handlers
+
+    private void OnPeerConnected(long id)
+    {
+        // TODO: send along the id
+        PeerConnected?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void OnPeerDisconnected(long id)
+    {
+        // TODO: send along the id
+        PeerDisconnected?.Invoke(this, EventArgs.Empty);
+    }
+
+    #endregion
 }
