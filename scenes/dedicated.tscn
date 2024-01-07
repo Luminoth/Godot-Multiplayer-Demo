@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c1bhov6uditia"]
+[gd_scene load_steps=3 format=3 uid="uid://c1bhov6uditia"]
 
 [ext_resource type="Script" path="res://scripts/Dedicated.cs" id="1_xcjba"]
+[ext_resource type="PackedScene" uid="uid://cy6mfnsgpmnh8" path="res://scenes/level.tscn" id="2_0qtsd"]
 
 [node name="Dedicated" type="Node"]
 script = ExtResource("1_xcjba")
+_levelScene = ExtResource("2_0qtsd")

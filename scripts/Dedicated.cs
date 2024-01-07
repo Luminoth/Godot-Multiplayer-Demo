@@ -4,6 +4,9 @@ using Godot;
 
 public partial class Dedicated : Node
 {
+    [Export]
+    private PackedScene _levelScene;
+
     public override void _Ready()
     {
         if(!OS.HasFeature("dedicated_server")) {
@@ -11,6 +14,19 @@ public partial class Dedicated : Node
         }
 
         bool useGameLift = OS.GetCmdlineArgs().Contains("--gamelift");
-        ServerManager.Instance.StartDedicatedServer(useGameLift);
+        if(!ServerManager.Instance.StartDedicatedServer(useGameLift)) {
+            GD.PrintErr("Failed to start dedicated game server");
+            return;
+        }
+    }
+
+    public override void _Process(double delta)
+    {
+        if(ServerManager.Instance.IsServer) {
+            var scene = _levelScene.Instantiate();
+            GetTree().Root.AddChild(scene);
+
+            QueueFree();
+        }
     }
 }

@@ -12,6 +12,8 @@ public partial class ClientManager : SingletonNode<ClientManager>
 
     #endregion
 
+    public int UniqueId => Multiplayer.GetUniqueId();
+
     #region Godot Lifecycle
 
     public override void _Ready()
@@ -61,6 +63,8 @@ public partial class ClientManager : SingletonNode<ClientManager>
 
     public void Disconnect()
     {
+        GD.Print("Disconnecting from game session ...");
+
         Multiplayer.MultiplayerPeer = null;
     }
 

@@ -25,6 +25,10 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     private bool _isGameLiftServer;
 
+    public bool IsServer => Multiplayer.IsServer();
+
+    public bool IsDedicatedServer => ClientManager.Instance.UniqueId == 1;
+
     #region Godot Lifecycle
 
     public override void _Ready()
@@ -114,6 +118,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
     {
         GD.Print($"Starting local server on {ListenPort} ...");
 
+        // give the server it's own API so we can run a parallel client
+        GetTree().SetMultiplayer(new SceneMultiplayer(), GetPath());
         var peer = new ENetMultiplayerPeer();
 
         var result = peer.CreateServer(ListenPort, _maxPlayers);
@@ -129,6 +135,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     public void StopServer()
     {
+        GD.Print("Stopping game server ...");
+
         Multiplayer.MultiplayerPeer = null;
 
         if(_isGameLiftServer) {
