@@ -27,6 +27,8 @@ public partial class JoinMenu : Node
         ClientManager.Instance.ConnectedToServer += OnConnectedToServer;
         ClientManager.Instance.ConnectionFailed += OnConnectionFailed;
         ClientManager.Instance.BeginJoinGameSession(address);
+
+        // TODO: disable buttons
     }
 
     #endregion
@@ -52,6 +54,8 @@ public partial class JoinMenu : Node
         ClientManager.Instance.ConnectionFailed -= OnConnectionFailed;
 
         GD.PrintErr($"Failed to connect to server!");
+
+        // TODO: enable buttons
     }
 
     #endregion

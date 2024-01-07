@@ -22,6 +22,9 @@ public partial class Dedicated : Node
 
     public override void _Process(double delta)
     {
+        // TODO: may actually want this to stick around
+        // and listen for input to navigate in non-headless mode
+
         if(ServerManager.Instance.IsServer) {
             var scene = _levelScene.Instantiate();
             GetTree().Root.AddChild(scene);

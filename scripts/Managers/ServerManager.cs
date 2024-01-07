@@ -8,10 +8,15 @@ using Aws.GameLift.Server.Model;
 
 public partial class ServerManager : SingletonNode<ServerManager>
 {
+    public class PeerEventArgs : EventArgs
+    {
+        public long Id { get; set; }
+    }
+
     #region Events
 
-    public event EventHandler PeerConnected;
-    public event EventHandler PeerDisconnected;
+    public event EventHandler<PeerEventArgs> PeerConnected;
+    public event EventHandler<PeerEventArgs> PeerDisconnected;
 
     #endregion
 
@@ -31,17 +36,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #region Godot Lifecycle
 
-    public override void _Ready()
-    {
-        Multiplayer.PeerConnected += OnPeerConnected;
-        Multiplayer.PeerDisconnected += OnPeerDisconnected;
-    }
-
     public override void _ExitTree()
     {
-        Multiplayer.PeerConnected -= OnPeerConnected;
-        Multiplayer.PeerDisconnected -= OnPeerDisconnected;
-
         StopServer();
     }
 
@@ -49,18 +45,18 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     public bool StartDedicatedServer(bool useGameLift)
     {
-        GD.Print("Starting dedicated server ...");
+        GD.Print("Starting dedicated game server ...");
 
         if(useGameLift) {
             return StartGameLiftServer();
         } else {
-            return StartLocalServer();
+            return StartServer();
         }
     }
 
     private bool StartGameLiftServer()
     {
-        GD.Print("Starting GameLift server ...");
+        GD.Print("Starting GameLift game server ...");
 
         var initSDKOutcome = GameLiftServerAPI.InitSDK();
         if(initSDKOutcome.Success) {
@@ -72,7 +68,7 @@ public partial class ServerManager : SingletonNode<ServerManager>
                     GD.Print("OnStartGameSession");
 
                     // TODO: what if this fails?
-                    StartLocalServer();
+                    StartServer();
 
                     GameLiftServerAPI.ActivateGameSession();
                 },
@@ -116,7 +112,14 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     public bool StartLocalServer()
     {
-        GD.Print($"Starting local server on {ListenPort} ...");
+        GD.Print($"Starting local game server ...");
+
+        return StartServer();
+    }
+
+    private bool StartServer()
+    {
+        GD.Print($"Starting game server on {ListenPort} ...");
 
         // give the server it's own API so we can run a parallel client
         GetTree().SetMultiplayer(new SceneMultiplayer(), GetPath());
@@ -130,12 +133,18 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
         Multiplayer.MultiplayerPeer = peer;
 
+        Multiplayer.PeerConnected += OnPeerConnected;
+        Multiplayer.PeerDisconnected += OnPeerDisconnected;
+
         return true;
     }
 
     public void StopServer()
     {
         GD.Print("Stopping game server ...");
+
+        Multiplayer.PeerConnected -= OnPeerConnected;
+        Multiplayer.PeerDisconnected -= OnPeerDisconnected;
 
         Multiplayer.MultiplayerPeer = null;
 
@@ -149,14 +158,12 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     private void OnPeerConnected(long id)
     {
-        // TODO: send along the id
-        PeerConnected?.Invoke(this, EventArgs.Empty);
+        PeerConnected?.Invoke(this, new PeerEventArgs { Id = id });
     }
 
     private void OnPeerDisconnected(long id)
     {
-        // TODO: send along the id
-        PeerDisconnected?.Invoke(this, EventArgs.Empty);
+        PeerDisconnected?.Invoke(this, new PeerEventArgs { Id = id });
     }
 
     #endregion

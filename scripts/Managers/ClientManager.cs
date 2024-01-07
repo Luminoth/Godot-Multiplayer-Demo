@@ -16,19 +16,8 @@ public partial class ClientManager : SingletonNode<ClientManager>
 
     #region Godot Lifecycle
 
-    public override void _Ready()
-    {
-        Multiplayer.ConnectedToServer += OnConnectedToServer;
-        Multiplayer.ConnectionFailed += OnConnectionFailed;
-        Multiplayer.ServerDisconnected += OnServerDisconnected;
-    }
-
     public override void _ExitTree()
     {
-        Multiplayer.ConnectedToServer -= OnConnectedToServer;
-        Multiplayer.ConnectionFailed -= OnConnectionFailed;
-        Multiplayer.ServerDisconnected -= OnServerDisconnected;
-
         Disconnect();
     }
 
@@ -59,11 +48,19 @@ public partial class ClientManager : SingletonNode<ClientManager>
         }
 
         Multiplayer.MultiplayerPeer = peer;
+
+        Multiplayer.ConnectedToServer += OnConnectedToServer;
+        Multiplayer.ConnectionFailed += OnConnectionFailed;
+        Multiplayer.ServerDisconnected += OnServerDisconnected;
     }
 
     public void Disconnect()
     {
         GD.Print("Disconnecting from game session ...");
+
+        Multiplayer.ConnectedToServer -= OnConnectedToServer;
+        Multiplayer.ConnectionFailed -= OnConnectionFailed;
+        Multiplayer.ServerDisconnected -= OnServerDisconnected;
 
         Multiplayer.MultiplayerPeer = null;
     }
@@ -82,7 +79,7 @@ public partial class ClientManager : SingletonNode<ClientManager>
 
     private void OnServerDisconnected()
     {
-        GD.Print("Server disconnected.!");
+        GD.Print("Server disconnected!");
 
         ServerDisconnected?.Invoke(this, EventArgs.Empty);
     }

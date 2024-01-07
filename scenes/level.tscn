@@ -1,15 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://cy6mfnsgpmnh8"]
+[gd_scene load_steps=3 format=3 uid="uid://cy6mfnsgpmnh8"]
 
 [ext_resource type="Script" path="res://scripts/Level.cs" id="1_uy5yd"]
+[ext_resource type="PackedScene" uid="uid://dieocfts5arp5" path="res://scenes/player.tscn" id="2_3o3ik"]
 
 [node name="Node3D" type="Node3D"]
 script = ExtResource("1_uy5yd")
+_playerScene = ExtResource("2_3o3ik")
+_spawnRoot = NodePath("SpawnRoot")
 
 [node name="SpawnRoot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://scenes/player/player.tscn")
+_spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
 spawn_path = NodePath("../SpawnRoot")
 
 [node name="Camera3D" type="Camera3D" parent="."]
