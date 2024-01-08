@@ -17,7 +17,7 @@ public partial class JoinMenu : Node
     public override void _Ready()
     {
         _addressInput = GetNode<LineEdit>(_addressInputPath);
-        _addressInput.PlaceholderText = EngineManager.Instance.DefaultAddress;
+        _addressInput.PlaceholderText = GameManager.Instance.DefaultAddress;
     }
 
     #endregion
@@ -28,7 +28,7 @@ public partial class JoinMenu : Node
     {
         var address = _addressInput.Text;
         if(string.IsNullOrWhiteSpace(address)) {
-            address = EngineManager.Instance.DefaultAddress;
+            address = GameManager.Instance.DefaultAddress;
         }
 
         var scene = _joiningGameScene.Instantiate<JoiningGame>();

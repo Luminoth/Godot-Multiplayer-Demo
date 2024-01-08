@@ -20,14 +20,6 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #endregion
 
-    [Export]
-    private int _listeningPort = 7777;
-
-    public int ListenPort => _listeningPort;
-
-    [Export]
-    private int _maxPlayers = 4;
-
     private bool _isGameLiftServer;
 
     public bool IsServer => Multiplayer.IsServer();
@@ -43,18 +35,18 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #endregion
 
-    public bool StartDedicatedServer(bool useGameLift)
+    public bool StartDedicatedServer(int port, int maxPlayers, bool useGameLift)
     {
         GD.Print("Starting dedicated game server ...");
 
         if(useGameLift) {
-            return StartGameLiftServer();
+            return StartGameLiftServer(port, maxPlayers);
         } else {
-            return StartServer();
+            return StartServer(port, maxPlayers);
         }
     }
 
-    private bool StartGameLiftServer()
+    private bool StartGameLiftServer(int port, int maxPlayers)
     {
         GD.Print("Starting GameLift game server ...");
 
@@ -68,7 +60,7 @@ public partial class ServerManager : SingletonNode<ServerManager>
                     GD.Print("OnStartGameSession");
 
                     // TODO: what if this fails?
-                    StartServer();
+                    StartServer(port, maxPlayers);
 
                     GameLiftServerAPI.ActivateGameSession();
                 },
@@ -89,7 +81,7 @@ public partial class ServerManager : SingletonNode<ServerManager>
                     GD.Print("OnHealthCheck");
                     return true;
                 },
-                _listeningPort,
+                port,
                 new LogParameters(new List<string>()
                 {
                     // TODO:
@@ -110,22 +102,22 @@ public partial class ServerManager : SingletonNode<ServerManager>
         }
     }
 
-    public bool StartLocalServer()
+    public bool StartLocalServer(int port, int maxPlayers)
     {
         GD.Print($"Starting local game server ...");
 
-        return StartServer();
+        return StartServer(port, maxPlayers);
     }
 
-    private bool StartServer()
+    private bool StartServer(int port, int maxPlayers)
     {
-        GD.Print($"Starting game server on {ListenPort} ...");
+        GD.Print($"Starting game server on {port} ...");
 
         // give the server it's own API so we can run a parallel client
         GetTree().SetMultiplayer(new SceneMultiplayer(), GetPath());
         var peer = new ENetMultiplayerPeer();
 
-        var result = peer.CreateServer(ListenPort, _maxPlayers);
+        var result = peer.CreateServer(port, maxPlayers);
         if(result != Error.Ok) {
             GD.PrintErr($"Failed to create server: {result}");
             return false;
@@ -153,16 +145,6 @@ public partial class ServerManager : SingletonNode<ServerManager>
             _isGameLiftServer = false;
         }
     }
-
-    #region RPC
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void LevelLoaded(long id)
-    {
-        GD.Print("client says level loaded");
-    }
-
-    #endregion
 
     #region Event Handlers
 

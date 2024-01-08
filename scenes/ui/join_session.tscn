@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bks0otoyo0lc4"]
 
-[ext_resource type="Script" path="res://scripts/JoinMenu.cs" id="1_s8a3g"]
-[ext_resource type="PackedScene" uid="uid://bej0i831ssqmf" path="res://scenes/joining_session.tscn" id="2_erqua"]
+[ext_resource type="Script" path="res://scripts/UI/JoinMenu.cs" id="1_s8a3g"]
+[ext_resource type="PackedScene" uid="uid://bej0i831ssqmf" path="res://scenes/ui/joining_session.tscn" id="2_wq8wh"]
 
 [node name="JoinSession" type="Control"]
 layout_mode = 3
@@ -11,7 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_s8a3g")
-_joiningGameScene = ExtResource("2_erqua")
+_joiningGameScene = ExtResource("2_wq8wh")
 _addressInputPath = NodePath("VBoxContainer/HBoxContainer/LineEdit")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]

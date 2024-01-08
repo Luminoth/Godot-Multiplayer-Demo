@@ -1,7 +1,6 @@
 using Godot;
 
 using System;
-using System.Threading;
 
 public partial class ClientManager : SingletonNode<ClientManager>
 {
@@ -10,8 +9,6 @@ public partial class ClientManager : SingletonNode<ClientManager>
     public event EventHandler ConnectedToServerEvent;
     public event EventHandler ConnectionFailedEvent;
     public event EventHandler ServerDisconnectedEvent;
-
-    public event EventHandler LoadLevelEvent;
 
     #endregion
 
@@ -28,7 +25,7 @@ public partial class ClientManager : SingletonNode<ClientManager>
 
     public void BeginJoinLocalGameSession()
     {
-        BeginJoinGameSession(EngineManager.Instance.DefaultAddress);
+        BeginJoinGameSession(GameManager.Instance.DefaultAddress);
     }
 
     public void BeginJoinGameSession(string address)
@@ -67,17 +64,6 @@ public partial class ClientManager : SingletonNode<ClientManager>
 
         Multiplayer.MultiplayerPeer = null;
     }
-
-    #region RPC
-
-    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void LoadLevel()
-    {
-        GD.Print("server says load level");
-        LoadLevelEvent?.Invoke(this, EventArgs.Empty);
-    }
-
-    #endregion
 
     #region Event Handlers
 

@@ -1,10 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://5peti33gm7xw"]
 
 [ext_resource type="Script" path="res://scripts/Boot.cs" id="1_fw7a0"]
-[ext_resource type="PackedScene" uid="uid://bjpw4eisdwniw" path="res://scenes/main_menu.tscn" id="2_b2v65"]
+[ext_resource type="PackedScene" uid="uid://bjpw4eisdwniw" path="res://scenes/ui/main_menu.tscn" id="2_x360y"]
 [ext_resource type="PackedScene" uid="uid://c1bhov6uditia" path="res://scenes/dedicated.tscn" id="3_146nq"]
 
 [node name="Boot" type="Node"]
 script = ExtResource("1_fw7a0")
-_mainMenuScene = ExtResource("2_b2v65")
+_mainMenuScene = ExtResource("2_x360y")
 _dedicatedScene = ExtResource("3_146nq")

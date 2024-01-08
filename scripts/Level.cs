@@ -47,7 +47,7 @@ public partial class Level : Node
         _players.Add(e.Id, player);
 
         GD.Print("rpcing to client");
-        RpcId(e.Id, nameof(ClientManager.Instance.LoadLevel));
+        RpcId(e.Id, nameof(GameManager.Instance.LoadLevel));
     }
 
     private void OnPeerDisconnected(object sender, ServerManager.PeerEventArgs e)

@@ -14,7 +14,7 @@ public partial class Dedicated : Node
         }
 
         bool useGameLift = OS.GetCmdlineArgs().Contains("--gamelift");
-        if(!ServerManager.Instance.StartDedicatedServer(useGameLift)) {
+        if(!ServerManager.Instance.StartDedicatedServer(GameManager.Instance.ListenPort, GameManager.Instance.MaxPlayers, useGameLift)) {
             GD.PrintErr("Failed to start dedicated game server");
             return;
         }

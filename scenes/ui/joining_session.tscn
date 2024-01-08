@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bej0i831ssqmf"]
 
-[ext_resource type="Script" path="res://scripts/JoiningGame.cs" id="1_xiyw8"]
-[ext_resource type="PackedScene" uid="uid://bjpw4eisdwniw" path="res://scenes/main_menu.tscn" id="2_3w70o"]
+[ext_resource type="Script" path="res://scripts/UI/JoiningGame.cs" id="1_xiyw8"]
+[ext_resource type="PackedScene" uid="uid://bjpw4eisdwniw" path="res://scenes/ui/main_menu.tscn" id="2_sfjhe"]
 [ext_resource type="PackedScene" uid="uid://cy6mfnsgpmnh8" path="res://scenes/level.tscn" id="3_pja0o"]
 
 [node name="JoiningSession" type="Control"]
@@ -12,7 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_xiyw8")
-_mainMenuScene = ExtResource("2_3w70o")
+_mainMenuScene = ExtResource("2_sfjhe")
 _levelScene = ExtResource("3_pja0o")
 
 [node name="Label" type="Label" parent="."]
