@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://bej0i831ssqmf"]
+
+[ext_resource type="Script" path="res://scripts/JoiningGame.cs" id="1_xiyw8"]
+[ext_resource type="PackedScene" uid="uid://bjpw4eisdwniw" path="res://scenes/main_menu.tscn" id="2_3w70o"]
+[ext_resource type="PackedScene" uid="uid://cy6mfnsgpmnh8" path="res://scenes/level.tscn" id="3_pja0o"]
+
+[node name="JoiningSession" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xiyw8")
+_mainMenuScene = ExtResource("2_3w70o")
+_levelScene = ExtResource("3_pja0o")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 459.0
+offset_top = 269.0
+offset_right = 641.0
+offset_bottom = 292.0
+text = "Joining Game Session ..."

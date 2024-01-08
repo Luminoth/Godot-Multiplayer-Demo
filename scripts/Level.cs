@@ -23,15 +23,15 @@ public partial class Level : Node
         GD.Print($"Is Dedicated Server: {ServerManager.Instance.IsDedicatedServer}");
 
         if(ServerManager.Instance.IsServer) {
-            ServerManager.Instance.PeerConnected += OnPeerConnected;
-            ServerManager.Instance.PeerDisconnected += OnPeerDisconnected;
+            ServerManager.Instance.PeerConnectedEvent += OnPeerConnected;
+            ServerManager.Instance.PeerDisconnectedEvent += OnPeerDisconnected;
         }
     }
 
     public override void _ExitTree()
     {
-        ServerManager.Instance.PeerConnected -= OnPeerConnected;
-        ServerManager.Instance.PeerDisconnected -= OnPeerDisconnected;
+        ServerManager.Instance.PeerConnectedEvent -= OnPeerConnected;
+        ServerManager.Instance.PeerDisconnectedEvent -= OnPeerDisconnected;
     }
 
     #endregion
@@ -45,6 +45,9 @@ public partial class Level : Node
         var player = _playerScene.Instantiate<Player>();
         GetNode(_spawnRoot).AddChild(player);
         _players.Add(e.Id, player);
+
+        GD.Print("rpcing to client");
+        RpcId(e.Id, nameof(ClientManager.Instance.LoadLevel));
     }
 
     private void OnPeerDisconnected(object sender, ServerManager.PeerEventArgs e)

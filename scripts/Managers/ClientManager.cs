@@ -1,14 +1,17 @@
 using Godot;
 
 using System;
+using System.Threading;
 
 public partial class ClientManager : SingletonNode<ClientManager>
 {
     #region Events
 
-    public event EventHandler ConnectedToServer;
-    public event EventHandler ConnectionFailed;
-    public event EventHandler ServerDisconnected;
+    public event EventHandler ConnectedToServerEvent;
+    public event EventHandler ConnectionFailedEvent;
+    public event EventHandler ServerDisconnectedEvent;
+
+    public event EventHandler LoadLevelEvent;
 
     #endregion
 
@@ -65,23 +68,34 @@ public partial class ClientManager : SingletonNode<ClientManager>
         Multiplayer.MultiplayerPeer = null;
     }
 
+    #region RPC
+
+    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void LoadLevel()
+    {
+        GD.Print("server says load level");
+        LoadLevelEvent?.Invoke(this, EventArgs.Empty);
+    }
+
+    #endregion
+
     #region Event Handlers
 
     private void OnConnectedToServer()
     {
-        ConnectedToServer?.Invoke(this, EventArgs.Empty);
+        ConnectedToServerEvent?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnConnectionFailed()
     {
-        ConnectionFailed?.Invoke(this, EventArgs.Empty);
+        ConnectionFailedEvent?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnServerDisconnected()
     {
         GD.Print("Server disconnected!");
 
-        ServerDisconnected?.Invoke(this, EventArgs.Empty);
+        ServerDisconnectedEvent?.Invoke(this, EventArgs.Empty);
     }
 
     #endregion

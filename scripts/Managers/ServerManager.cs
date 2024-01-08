@@ -15,8 +15,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #region Events
 
-    public event EventHandler<PeerEventArgs> PeerConnected;
-    public event EventHandler<PeerEventArgs> PeerDisconnected;
+    public event EventHandler<PeerEventArgs> PeerConnectedEvent;
+    public event EventHandler<PeerEventArgs> PeerDisconnectedEvent;
 
     #endregion
 
@@ -154,16 +154,26 @@ public partial class ServerManager : SingletonNode<ServerManager>
         }
     }
 
+    #region RPC
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void LevelLoaded(long id)
+    {
+        GD.Print("client says level loaded");
+    }
+
+    #endregion
+
     #region Event Handlers
 
     private void OnPeerConnected(long id)
     {
-        PeerConnected?.Invoke(this, new PeerEventArgs { Id = id });
+        PeerConnectedEvent?.Invoke(this, new PeerEventArgs { Id = id });
     }
 
     private void OnPeerDisconnected(long id)
     {
-        PeerDisconnected?.Invoke(this, new PeerEventArgs { Id = id });
+        PeerDisconnectedEvent?.Invoke(this, new PeerEventArgs { Id = id });
     }
 
     #endregion

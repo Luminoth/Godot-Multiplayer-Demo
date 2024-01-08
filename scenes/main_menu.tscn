@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bjpw4eisdwniw"]
 
 [ext_resource type="Script" path="res://scripts/MainMenu.cs" id="1_bfvb8"]
-[ext_resource type="PackedScene" uid="uid://cy6mfnsgpmnh8" path="res://scenes/level.tscn" id="2_gwrf5"]
+[ext_resource type="PackedScene" uid="uid://bej0i831ssqmf" path="res://scenes/joining_session.tscn" id="3_6num8"]
 [ext_resource type="PackedScene" uid="uid://bks0otoyo0lc4" path="res://scenes/join_session.tscn" id="3_h6ekp"]
 
 [node name="MainMenu" type="Control"]
@@ -12,8 +12,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_bfvb8")
-_levelScene = ExtResource("2_gwrf5")
 _joinGameScene = ExtResource("3_h6ekp")
+_joiningGameScene = ExtResource("3_6num8")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2

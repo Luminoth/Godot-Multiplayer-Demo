@@ -5,15 +5,22 @@ using System;
 public partial class JoinMenu : Node
 {
     [Export]
-    private PackedScene _levelScene;
+    private PackedScene _joiningGameScene;
+
+    [Export]
+    private NodePath _addressInputPath;
 
     private LineEdit _addressInput;
 
+    #region Godot Lifecycle
+
     public override void _Ready()
     {
-        _addressInput = GetNode<LineEdit>("VBoxContainer/HBoxContainer/LineEdit");
+        _addressInput = GetNode<LineEdit>(_addressInputPath);
         _addressInput.PlaceholderText = EngineManager.Instance.DefaultAddress;
     }
+
+    #endregion
 
     #region Signals
 
@@ -24,38 +31,11 @@ public partial class JoinMenu : Node
             address = EngineManager.Instance.DefaultAddress;
         }
 
-        ClientManager.Instance.ConnectedToServer += OnConnectedToServer;
-        ClientManager.Instance.ConnectionFailed += OnConnectionFailed;
-        ClientManager.Instance.BeginJoinGameSession(address);
-
-        // TODO: disable buttons
-    }
-
-    #endregion
-
-    #region Event Handlers
-
-    private void OnConnectedToServer(object sender, EventArgs e)
-    {
-        ClientManager.Instance.ConnectedToServer -= OnConnectedToServer;
-        ClientManager.Instance.ConnectionFailed -= OnConnectionFailed;
-
-        GD.Print("Connected to server!");
-
-        var scene = _levelScene.Instantiate();
+        var scene = _joiningGameScene.Instantiate<JoiningGame>();
         GetTree().Root.AddChild(scene);
+        scene.JoinGameSession(address);
 
         QueueFree();
-    }
-
-    private void OnConnectionFailed(object sender, EventArgs e)
-    {
-        ClientManager.Instance.ConnectedToServer -= OnConnectedToServer;
-        ClientManager.Instance.ConnectionFailed -= OnConnectionFailed;
-
-        GD.PrintErr($"Failed to connect to server!");
-
-        // TODO: enable buttons
     }
 
     #endregion

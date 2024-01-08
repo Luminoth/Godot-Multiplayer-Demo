@@ -1,14 +1,12 @@
 using Godot;
 
-using System;
-
 public partial class MainMenu : Node
 {
     [Export]
-    private PackedScene _levelScene;
+    private PackedScene _joinGameScene;
 
     [Export]
-    private PackedScene _joinGameScene;
+    private PackedScene _joiningGameScene;
 
     #region Signals
 
@@ -21,11 +19,11 @@ public partial class MainMenu : Node
             return;
         }
 
-        ClientManager.Instance.ConnectedToServer += OnConnectedToServer;
-        ClientManager.Instance.ConnectionFailed += OnConnectionFailed;
-        ClientManager.Instance.BeginJoinLocalGameSession();
+        var scene = _joiningGameScene.Instantiate<JoiningGame>();
+        GetTree().Root.AddChild(scene);
+        scene.JoinLocalGameSession();
 
-        // TODO: disable buttons
+        QueueFree();
     }
 
     private void _on_join_pressed()
@@ -38,30 +36,5 @@ public partial class MainMenu : Node
 
     #endregion
 
-    #region Event Handlers
 
-    private void OnConnectedToServer(object sender, EventArgs e)
-    {
-        ClientManager.Instance.ConnectedToServer -= OnConnectedToServer;
-        ClientManager.Instance.ConnectionFailed -= OnConnectionFailed;
-
-        GD.Print("Connected to server!");
-
-        var scene = _levelScene.Instantiate();
-        GetTree().Root.AddChild(scene);
-
-        QueueFree();
-    }
-
-    private void OnConnectionFailed(object sender, EventArgs e)
-    {
-        ClientManager.Instance.ConnectedToServer -= OnConnectedToServer;
-        ClientManager.Instance.ConnectionFailed -= OnConnectionFailed;
-
-        GD.PrintErr($"Failed to connect to server!");
-
-        // TODO: enable buttons
-    }
-
-    #endregion
 }
