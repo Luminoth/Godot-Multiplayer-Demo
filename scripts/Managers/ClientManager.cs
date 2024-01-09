@@ -54,9 +54,11 @@ public partial class ClientManager : SingletonNode<ClientManager>
         Multiplayer.ServerDisconnected += OnServerDisconnected;
     }
 
-    public void Disconnect()
+    public void Disconnect(bool silent = false)
     {
-        GD.Print("Disconnecting from game session ...");
+        if(!silent) {
+            GD.Print("Disconnecting from game session ...");
+        }
 
         Multiplayer.ConnectedToServer -= OnConnectedToServer;
         Multiplayer.ConnectionFailed -= OnConnectionFailed;
@@ -82,6 +84,8 @@ public partial class ClientManager : SingletonNode<ClientManager>
         GD.Print("Server disconnected!");
 
         ServerDisconnectedEvent?.Invoke(this, EventArgs.Empty);
+
+        Disconnect(true);
     }
 
     #endregion

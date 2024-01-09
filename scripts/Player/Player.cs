@@ -8,7 +8,7 @@ public partial class Player : Node
 
     public override void _Ready()
     {
-        GD.Print("Player ready!");
+        GD.Print($"Player {ClientManager.Instance.UniqueId} ready!");
     }
 
     #endregion

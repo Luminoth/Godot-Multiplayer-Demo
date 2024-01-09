@@ -14,8 +14,7 @@ public partial class MainMenu : Node
     {
         GD.Print("Creating game session ...");
 
-        if(!ServerManager.Instance.StartLocalServer(GameManager.Instance.ListenPort, GameManager.Instance.MaxPlayers)) {
-            GD.PrintErr("Failed to start local game server");
+        if(!GameManager.Instance.StartLocalServer()) {
             return;
         }
 
