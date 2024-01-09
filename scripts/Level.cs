@@ -16,7 +16,7 @@ public partial class Level : Node
 
     public override void _Ready()
     {
-        GD.Print("Level loading ...");
+        GD.Print("Level ready ...");
         GD.Print($"Peer ID: {ClientManager.Instance.UniqueId}");
         GD.Print($"Is Server: {ServerManager.Instance.IsServer}");
         GD.Print($"Is Dedicated Server: {ServerManager.Instance.IsDedicatedServer}");
@@ -26,7 +26,8 @@ public partial class Level : Node
             ServerManager.Instance.PeerConnectedEvent += OnPeerConnected;
             ServerManager.Instance.PeerDisconnectedEvent += OnPeerDisconnected;
         } else {
-            Rpc(nameof(GameManager.Instance.LevelLoaded), ClientManager.Instance.UniqueId);
+            GD.Print("signaling level loaded");
+            Rpc(nameof(ClientManager.Instance.LevelLoaded), ClientManager.Instance.UniqueId);
         }
     }
 
@@ -42,7 +43,7 @@ public partial class Level : Node
 
     private void OnPeerConnected(object sender, ServerManager.PeerEventArgs e)
     {
-        GD.Print($"Peer {e.Id} connected, spawning player ...");
+        GD.Print($"Player {e.Id} connected, spawning ...");
 
         var player = _playerScene.Instantiate<Player>();
         GetNode(_spawnRoot).AddChild(player);
@@ -51,7 +52,7 @@ public partial class Level : Node
 
     private void OnPeerDisconnected(object sender, ServerManager.PeerEventArgs e)
     {
-        GD.Print($"Peer disconnected: {e.Id}");
+        GD.Print($"Player {e.Id} disconnected, despawning ...");
 
         _players.Remove(e.Id);
     }

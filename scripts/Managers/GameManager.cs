@@ -4,12 +4,6 @@ using System;
 
 public partial class GameManager : SingletonNode<GameManager>
 {
-    #region Events
-
-    public event EventHandler LoadLevelEvent;
-
-    #endregion
-
     [Export]
     private int _listeningPort = 7777;
 
@@ -30,6 +24,8 @@ public partial class GameManager : SingletonNode<GameManager>
     public override void _ExitTree()
     {
         ServerManager.Instance.PeerConnectedEvent -= OnPeerConnected;
+
+        base._ExitTree();
     }
 
     #endregion
@@ -62,40 +58,19 @@ public partial class GameManager : SingletonNode<GameManager>
     {
         ServerManager.Instance.PeerConnectedEvent += OnPeerConnected;
 
+        GD.Print("Server loading level ...");
+
         var scene = _levelScene.Instantiate();
         GetTree().Root.AddChild(scene);
     }
-
-    #region Client RPC
-
-    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void LevelLoaded(long id)
-    {
-        GD.Print($"Client {id} says level loaded");
-    }
-
-    #endregion
-
-    #region Server RPC
-
-    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    public void LoadLevel()
-    {
-        GD.Print("Server says load level");
-        LoadLevelEvent?.Invoke(this, EventArgs.Empty);
-    }
-
-    #endregion
 
     #region Event Handlers
 
     private void OnPeerConnected(object sender, ServerManager.PeerEventArgs e)
     {
-        GD.Print($"Peer {e.Id} connected, am authority: {IsMultiplayerAuthority()}");
-        if(IsMultiplayerAuthority()) {
-            GD.Print("rpcing to client");
-            RpcId(e.Id, nameof(LoadLevel));
-        }
+        GD.Print($"Player {e.Id} connected, signaling to load level {nameof(ServerManager.Instance.LoadLevel)} ...");
+
+        ServerManager.Instance.RpcId(e.Id, nameof(ServerManager.Instance.LoadLevel));
     }
 
     #endregion

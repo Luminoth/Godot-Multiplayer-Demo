@@ -28,9 +28,21 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #region Godot Lifecycle
 
+    public override void _EnterTree()
+    {
+        base._EnterTree();
+
+        // give the server it's own API so we can run a parallel client
+        // per https://github.com/godotengine/godot/issues/80604 custom multiplayer should be set in _enter_tree
+        GD.Print($"Creating custom server multiplayer API at {GetPath()}");
+        GetTree().SetMultiplayer(MultiplayerApi.CreateDefaultInterface(), GetPath());
+    }
+
     public override void _ExitTree()
     {
         StopServer();
+
+        base._ExitTree();
     }
 
     #endregion
@@ -113,8 +125,6 @@ public partial class ServerManager : SingletonNode<ServerManager>
     {
         GD.Print($"Starting game server on {port} ...");
 
-        // give the server it's own API so we can run a parallel client
-        GetTree().SetMultiplayer(new SceneMultiplayer(), GetPath());
         var peer = new ENetMultiplayerPeer();
 
         var result = peer.CreateServer(port, maxPlayers);
@@ -146,15 +156,41 @@ public partial class ServerManager : SingletonNode<ServerManager>
         }
     }
 
+    // NOTE: RPC definitions duplicated in ClientManager.cs
+
+    #region Client RPC
+
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void LevelLoaded(long id)
+    {
+        GD.Print($"Client {id} says level loaded");
+    }
+
+    #endregion
+
+    #region Server RPC
+
+    [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void LoadLevel()
+    {
+        GD.PrintErr("Server received server RPC");
+    }
+
+    #endregion
+
     #region Event Handlers
 
     private void OnPeerConnected(long id)
     {
+        GD.Print($"Peer {id} connected");
+
         PeerConnectedEvent?.Invoke(this, new PeerEventArgs { Id = id });
     }
 
     private void OnPeerDisconnected(long id)
     {
+        GD.Print($"Peer {id} disconnected");
+
         PeerDisconnectedEvent?.Invoke(this, new PeerEventArgs { Id = id });
     }
 
