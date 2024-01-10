@@ -18,16 +18,18 @@ public partial class Level : Node
     {
         GD.Print("Level ready ...");
         GD.Print($"Peer ID: {ClientManager.Instance.UniqueId}");
-        GD.Print($"Is Server: {ServerManager.Instance.IsServer}");
-        GD.Print($"Is Dedicated Server: {ServerManager.Instance.IsDedicatedServer}");
-        GD.Print($"Is Multiplayer Authority: {IsMultiplayerAuthority()}");
 
-        if(ServerManager.Instance.IsServer) {
+        GD.Print($"Server Is Server (this is a lie): {ServerManager.Instance.IsServer}");
+        GD.Print($"Server Is Actual Server: {ServerManager.Instance.IsActualServer}");
+        GD.Print($"Is Dedicated Server: {ServerManager.Instance.IsDedicatedServer}");
+        GD.Print($"Is Multiplayer Authority (this is a lie): {IsMultiplayerAuthority()}");
+        GD.Print($"Is Actual Multiplayer Authority: {GameManager.Instance.IsActualMultiplayerAuthority}");
+
+        if(ServerManager.Instance.IsActualServer) {
             ServerManager.Instance.PeerConnectedEvent += OnPeerConnected;
             ServerManager.Instance.PeerDisconnectedEvent += OnPeerDisconnected;
         } else {
-            GD.Print("signaling level loaded");
-            Rpc(nameof(ClientManager.Instance.LevelLoaded), ClientManager.Instance.UniqueId);
+            ClientManager.Instance.Rpc(nameof(ClientManager.Instance.LevelLoaded), ClientManager.Instance.UniqueId);
         }
     }
 

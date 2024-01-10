@@ -24,6 +24,10 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     public bool IsServer => Multiplayer.IsServer();
 
+    private bool _isServer;
+
+    public bool IsActualServer => _isServer;
+
     public bool IsDedicatedServer => ClientManager.Instance.UniqueId == 1;
 
     #region Godot Lifecycle
@@ -138,12 +142,16 @@ public partial class ServerManager : SingletonNode<ServerManager>
         Multiplayer.PeerConnected += OnPeerConnected;
         Multiplayer.PeerDisconnected += OnPeerDisconnected;
 
+        _isServer = true;
+
         return true;
     }
 
     public void StopServer()
     {
         GD.Print("Stopping game server ...");
+
+        _isServer = false;
 
         Multiplayer.PeerConnected -= OnPeerConnected;
         Multiplayer.PeerDisconnected -= OnPeerDisconnected;
