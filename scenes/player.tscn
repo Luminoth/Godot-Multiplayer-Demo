@@ -9,6 +9,7 @@
 script = ExtResource("1_faql8")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+collision_layer = 2
 script = ExtResource("2_wrx26")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]

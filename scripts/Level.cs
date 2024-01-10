@@ -57,8 +57,8 @@ public partial class Level : Node
     {
         GD.Print($"Player {e.Id} disconnected, despawning ...");
 
-        _players.Remove(e.Id);
-        // TODO: remove the player's node
+        _players.Remove(e.Id, out Player player);
+        player.QueueFree();
     }
 
     #endregion

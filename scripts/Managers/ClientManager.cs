@@ -92,7 +92,7 @@ public partial class ClientManager : SingletonNode<ClientManager>
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void LevelLoaded(long id)
     {
-        GD.PrintErr($"Client received client RPC");
+        GD.PrintErr($"Client received level loaded from {id}");
     }
 
     #endregion

@@ -185,7 +185,7 @@ public partial class ServerManager : SingletonNode<ServerManager>
     [Rpc(TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void LoadLevel()
     {
-        GD.PrintErr("Server received server RPC");
+        GD.PrintErr("Server received load level");
     }
 
     #endregion

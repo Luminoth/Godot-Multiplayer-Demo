@@ -49,6 +49,11 @@ move_back={
 ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="environment"
+3d_physics/layer_2="players"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
