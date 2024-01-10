@@ -10,7 +10,7 @@ public partial class PlayerMovement : CharacterBody3D
     public override void _PhysicsProcess(double delta)
     {
         var input = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
-        Velocity = new Vector3(input.X, Velocity.Y, input.Y) * _speed;
+        Velocity = new Vector3(input.X * _speed, Velocity.Y, input.Y * 0.0f);
 
         MoveAndSlide();
     }
