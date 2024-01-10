@@ -68,7 +68,7 @@ public partial class JoiningGame : Node
         ClientManager.Instance.LoadLevelEvent -= OnLoadLevel;
 
         var scene = _levelScene.Instantiate();
-        GetTree().Root.AddChild(scene);
+        ClientManager.Instance.AddChild(scene);
 
         QueueFree();
     }

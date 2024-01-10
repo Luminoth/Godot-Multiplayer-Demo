@@ -61,7 +61,7 @@ public partial class GameManager : SingletonNode<GameManager>
         GD.Print("Server loading level ...");
 
         var scene = _levelScene.Instantiate();
-        GetTree().Root.AddChild(scene);
+        ServerManager.Instance.AddChild(scene);
     }
 
     #region Event Handlers
