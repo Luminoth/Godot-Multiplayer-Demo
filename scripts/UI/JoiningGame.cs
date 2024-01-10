@@ -14,6 +14,7 @@ public partial class JoiningGame : Node
 
     public override void _ExitTree()
     {
+        ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToLocalServer;
         ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToServer;
         ClientManager.Instance.ConnectionFailedEvent -= OnConnectionFailed;
         ClientManager.Instance.LoadLevelEvent -= OnLoadLevel;
@@ -23,9 +24,9 @@ public partial class JoiningGame : Node
 
     public void JoinLocalGameSession()
     {
-        ClientManager.Instance.ConnectedToServerEvent += OnConnectedToServer;
+        ClientManager.Instance.ConnectedToServerEvent += OnConnectedToLocalServer;
         ClientManager.Instance.ConnectionFailedEvent += OnConnectionFailed;
-        ClientManager.Instance.LoadLevelEvent += OnLoadLevel;
+        // don't listen for level load events, the local server will do that for us
         ClientManager.Instance.BeginJoinLocalGameSession();
     }
 
@@ -39,6 +40,16 @@ public partial class JoiningGame : Node
 
     #region Event Handlers
 
+    private void OnConnectedToLocalServer(object sender, EventArgs e)
+    {
+        ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToLocalServer;
+        ClientManager.Instance.ConnectionFailedEvent -= OnConnectionFailed;
+
+        GD.Print("Connected to local server!");
+
+        QueueFree();
+    }
+
     private void OnConnectedToServer(object sender, EventArgs e)
     {
         ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToServer;
@@ -49,6 +60,7 @@ public partial class JoiningGame : Node
 
     private void OnConnectionFailed(object sender, EventArgs e)
     {
+        ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToLocalServer;
         ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToServer;
         ClientManager.Instance.ConnectionFailedEvent -= OnConnectionFailed;
         ClientManager.Instance.ConnectionFailedEvent -= OnLoadLevel;

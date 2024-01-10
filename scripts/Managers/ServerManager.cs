@@ -28,7 +28,9 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     public bool IsActualServer => _isServer;
 
-    public bool IsDedicatedServer => ClientManager.Instance.UniqueId == 1;
+    private bool _isDedicatedServer;
+
+    public bool IsDedicatedServer => _isDedicatedServer;
 
     #region Godot Lifecycle
 
@@ -58,7 +60,7 @@ public partial class ServerManager : SingletonNode<ServerManager>
         if(useGameLift) {
             return StartGameLiftServer(port, maxPlayers);
         } else {
-            return StartServer(port, maxPlayers);
+            return StartServer(port, maxPlayers, true);
         }
     }
 
@@ -76,7 +78,7 @@ public partial class ServerManager : SingletonNode<ServerManager>
                     GD.Print("OnStartGameSession");
 
                     // TODO: what if this fails?
-                    StartServer(port, maxPlayers);
+                    StartServer(port, maxPlayers, true);
 
                     GameLiftServerAPI.ActivateGameSession();
                 },
@@ -122,10 +124,10 @@ public partial class ServerManager : SingletonNode<ServerManager>
     {
         GD.Print($"Starting local game server ...");
 
-        return StartServer(port, maxPlayers);
+        return StartServer(port, maxPlayers, false);
     }
 
-    private bool StartServer(int port, int maxPlayers)
+    private bool StartServer(int port, int maxPlayers, bool isDedicatedServer)
     {
         GD.Print($"Starting game server on {port} ...");
 
@@ -143,6 +145,7 @@ public partial class ServerManager : SingletonNode<ServerManager>
         Multiplayer.PeerDisconnected += OnPeerDisconnected;
 
         _isServer = true;
+        _isDedicatedServer = isDedicatedServer;
 
         return true;
     }
@@ -152,6 +155,7 @@ public partial class ServerManager : SingletonNode<ServerManager>
         GD.Print("Stopping game server ...");
 
         _isServer = false;
+        _isDedicatedServer = false;
 
         Multiplayer.PeerConnected -= OnPeerConnected;
         Multiplayer.PeerDisconnected -= OnPeerDisconnected;

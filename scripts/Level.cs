@@ -16,7 +16,7 @@ public partial class Level : Node
 
     public override void _Ready()
     {
-        GD.Print("Level ready ...");
+        GD.Print("Level ready!");
         GD.Print($"Peer ID: {ClientManager.Instance.UniqueId}");
 
         GD.Print($"Server Is Server (this is a lie): {ServerManager.Instance.IsServer}");
