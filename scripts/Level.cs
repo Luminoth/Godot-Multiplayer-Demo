@@ -46,6 +46,7 @@ public partial class Level : Node
         GD.Print($"Player {e.Id} connected, spawning ...");
 
         var player = _playerScene.Instantiate<Player>();
+        player.Name = $"Player {e.Id}";
         GetNode(_spawnRoot).AddChild(player);
         _players.Add(e.Id, player);
     }
@@ -55,6 +56,7 @@ public partial class Level : Node
         GD.Print($"Player {e.Id} disconnected, despawning ...");
 
         _players.Remove(e.Id);
+        // TODO: remove the player's node
     }
 
     #endregion
