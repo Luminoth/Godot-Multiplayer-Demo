@@ -7,10 +7,19 @@ public partial class Player : Node
 
     public PlayerInput Input => _input;
 
-    [Export]
     private long _clientId;
 
-    public long ClientId => _clientId;
+    [Export]
+    public long ClientId
+    {
+        get => _clientId; set
+        {
+            GD.Print($"Setting player authority: {value}");
+
+            _clientId = value;
+            _input.SetMultiplayerAuthority((int)_clientId);
+        }
+    }
 
     #region Godot Lifecycle
 
@@ -20,12 +29,4 @@ public partial class Player : Node
     }
 
     #endregion
-
-    public void SetClientId(long id)
-    {
-        GD.Print($"Setting player authority: {id}");
-
-        _clientId = id;
-        _input.SetMultiplayerAuthority((int)_clientId);
-    }
 }

@@ -57,7 +57,7 @@ public partial class Level : Node
 
         var player = _playerScene.Instantiate<Player>();
         player.Name = $"Player {e.Id}";
-        player.SetClientId(e.Id);
+        player.ClientId = e.Id;
         _spawnRoot.AddChild(player);
         _players.Add(e.Id, player);
     }

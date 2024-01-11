@@ -18,7 +18,7 @@ public partial class PlayerMovement : CharacterBody3D
     {
         var direction = _player.Input.Direction;
 
-        GD.Print($"Player {_player.ClientId} moves {direction}");
+        //GD.Print($"Player {_player.ClientId} moves {direction}");
 
         Velocity = new Vector3(direction.X * _speed, Velocity.Y, direction.Y * 0.0f);
         MoveAndSlide();

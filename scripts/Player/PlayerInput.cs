@@ -9,7 +9,7 @@ public partial class PlayerInput : MultiplayerSynchronizer
 
     #region Godot Lifecycle
 
-    public override void _Ready()
+    public override void _EnterTree()
     {
         bool isAuthority = GetMultiplayerAuthority() == ClientManager.Instance.UniqueId;
         GD.Print($"Player {GetParent<Player>().ClientId} input authority: {isAuthority}");
