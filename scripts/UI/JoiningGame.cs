@@ -4,12 +4,6 @@ using System;
 
 public partial class JoiningGame : Node
 {
-    [Export]
-    private PackedScene _mainMenuScene;
-
-    [Export]
-    private PackedScene _levelScene;
-
     private bool _joiningLocal;
 
     #region Godot Lifecycle
@@ -61,7 +55,7 @@ public partial class JoiningGame : Node
 
         GD.PrintErr($"Failed to connect to server!");
 
-        var scene = _mainMenuScene.Instantiate();
+        var scene = UIManager.Instance.MainMenuScene.Instantiate();
         GetTree().Root.AddChild(scene);
 
         QueueFree();
@@ -78,7 +72,7 @@ public partial class JoiningGame : Node
         } else {
             GD.Print("Client loading level ...");
 
-            var scene = _levelScene.Instantiate();
+            var scene = GameManager.Instance.LevelScene.Instantiate();
             ClientManager.Instance.AddChild(scene);
         }
 

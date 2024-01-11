@@ -1,0 +1,12 @@
+[gd_scene load_steps=5 format=3 uid="uid://bse7blvidn3hf"]
+
+[ext_resource type="Script" path="res://scripts/Managers/UIManager.cs" id="1_jm1ed"]
+[ext_resource type="PackedScene" uid="uid://bjpw4eisdwniw" path="res://scenes/ui/main_menu.tscn" id="2_h70po"]
+[ext_resource type="PackedScene" uid="uid://bks0otoyo0lc4" path="res://scenes/ui/join_session.tscn" id="3_aru55"]
+[ext_resource type="PackedScene" uid="uid://bej0i831ssqmf" path="res://scenes/ui/joining_session.tscn" id="4_cctr1"]
+
+[node name="UiManager" type="Node"]
+script = ExtResource("1_jm1ed")
+_mainMenuScene = ExtResource("2_h70po")
+_joinGameScene = ExtResource("3_aru55")
+_joiningGameScene = ExtResource("4_cctr1")

@@ -2,12 +2,6 @@ using Godot;
 
 public partial class MainMenu : Node
 {
-    [Export]
-    private PackedScene _joinGameScene;
-
-    [Export]
-    private PackedScene _joiningGameScene;
-
     #region Signals
 
     private void _on_create_pressed()
@@ -18,7 +12,7 @@ public partial class MainMenu : Node
             return;
         }
 
-        var scene = _joiningGameScene.Instantiate<JoiningGame>();
+        var scene = UIManager.Instance.JoiningGameScene.Instantiate<JoiningGame>();
         GetTree().Root.AddChild(scene);
         scene.JoinLocalGameSession();
 
@@ -27,7 +21,7 @@ public partial class MainMenu : Node
 
     private void _on_join_pressed()
     {
-        var scene = _joinGameScene.Instantiate();
+        var scene = UIManager.Instance.JoinGameScene.Instantiate();
         GetTree().Root.AddChild(scene);
 
         QueueFree();

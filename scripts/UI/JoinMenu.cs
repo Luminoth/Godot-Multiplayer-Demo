@@ -3,12 +3,6 @@ using Godot;
 public partial class JoinMenu : Node
 {
     [Export]
-    private PackedScene _joiningGameScene;
-
-    [Export]
-    private PackedScene _mainMenuScene;
-
-    [Export]
     private LineEdit _addressInput;
 
     #region Godot Lifecycle
@@ -29,7 +23,7 @@ public partial class JoinMenu : Node
             address = GameManager.Instance.DefaultAddress;
         }
 
-        var scene = _joiningGameScene.Instantiate<JoiningGame>();
+        var scene = UIManager.Instance.JoiningGameScene.Instantiate<JoiningGame>();
         GetTree().Root.AddChild(scene);
         scene.JoinGameSession(address);
 
@@ -38,7 +32,7 @@ public partial class JoinMenu : Node
 
     private void _on_back_pressed()
     {
-        var scene = _mainMenuScene.Instantiate<MainMenu>();
+        var scene = UIManager.Instance.MainMenuScene.Instantiate<MainMenu>();
         GetTree().Root.AddChild(scene);
 
         QueueFree();

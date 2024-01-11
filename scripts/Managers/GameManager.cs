@@ -1,7 +1,5 @@
 using Godot;
 
-using System;
-
 public partial class GameManager : SingletonNode<GameManager>
 {
     [Export]
@@ -18,6 +16,13 @@ public partial class GameManager : SingletonNode<GameManager>
 
     [Export]
     private PackedScene _levelScene;
+
+    public PackedScene LevelScene => _levelScene;
+
+    [Export]
+    private PackedScene _playerScene;
+
+    public PackedScene PlayerScene => _playerScene;
 
     #region Godot Lifecycle
 

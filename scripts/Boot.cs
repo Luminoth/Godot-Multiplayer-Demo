@@ -5,9 +5,6 @@ using Godot;
 public partial class Boot : Node
 {
     [Export]
-    private PackedScene _mainMenuScene;
-
-    [Export]
     private PackedScene _dedicatedScene;
 
     public override void _Process(double delta)
@@ -21,7 +18,7 @@ public partial class Boot : Node
         } else {
             GD.Print("Starting client ...");
 
-            var scene = _mainMenuScene.Instantiate();
+            var scene = UIManager.Instance.MainMenuScene.Instantiate();
             GetTree().Root.AddChild(scene);
         }
 

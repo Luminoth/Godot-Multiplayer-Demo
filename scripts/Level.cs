@@ -5,9 +5,6 @@ using System.Collections.Generic;
 public partial class Level : Node
 {
     [Export]
-    private PackedScene _playerScene;
-
-    [Export]
     private Node _spawnRoot;
 
     private Dictionary<long, Player> _players = new Dictionary<long, Player>();
@@ -55,7 +52,7 @@ public partial class Level : Node
     {
         GD.Print($"Client {e.Id} level loaded, spawning ...");
 
-        var player = _playerScene.Instantiate<Player>();
+        var player = GameManager.Instance.PlayerScene.Instantiate<Player>();
         player.Name = $"Player {e.Id}";
         player.ClientId = e.Id;
         _spawnRoot.AddChild(player);
