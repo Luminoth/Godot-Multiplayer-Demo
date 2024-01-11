@@ -1,12 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://dieocfts5arp5"]
+[gd_scene load_steps=5 format=3 uid="uid://dieocfts5arp5"]
 
 [ext_resource type="Script" path="res://scripts/Player/Player.cs" id="1_faql8"]
 [ext_resource type="Script" path="res://scripts/Player/PlayerMovement.cs" id="2_wrx26"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_yv30u"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_e28bp"]
+properties/0/path = NodePath(".:_clientId")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
 [node name="Player" type="Node3D"]
 script = ExtResource("1_faql8")
+_movementPath = NodePath("CharacterBody3D")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
 collision_layer = 2
@@ -16,3 +22,6 @@ script = ExtResource("2_wrx26")
 shape = SubResource("CylinderShape3D_yv30u")
 
 [node name="CSGCylinder3D" type="CSGCylinder3D" parent="CharacterBody3D"]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_e28bp")

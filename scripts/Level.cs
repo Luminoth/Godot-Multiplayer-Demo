@@ -24,6 +24,7 @@ public partial class Level : Node
         GD.Print($"Is Dedicated Server: {ServerManager.Instance.IsDedicatedServer}");
         GD.Print($"Is Multiplayer Authority (this is a lie): {IsMultiplayerAuthority()}");
         GD.Print($"Is Actual Multiplayer Authority: {GameManager.Instance.IsActualMultiplayerAuthority}");
+        GD.Print($"Client Id: {ClientManager.Instance.UniqueId}");
 
         if(ServerManager.Instance.IsActualServer) {
             ServerManager.Instance.PeerConnectedEvent += OnPeerConnected;
@@ -50,6 +51,7 @@ public partial class Level : Node
         var player = _playerScene.Instantiate<Player>();
         player.Name = $"Player {e.Id}";
         GetNode(_spawnRoot).AddChild(player);
+        player.SetClientId(e.Id);
         _players.Add(e.Id, player);
     }
 

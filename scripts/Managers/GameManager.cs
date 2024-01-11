@@ -19,7 +19,7 @@ public partial class GameManager : SingletonNode<GameManager>
     [Export]
     private PackedScene _levelScene;
 
-    public bool IsActualMultiplayerAuthority => ServerManager.Instance.IsActualServer;
+    public bool IsActualMultiplayerAuthority => ServerManager.Instance.IsActualServer || ClientManager.Instance.IsMultiplayerAuthority();
 
     #region Godot Lifecycle
 
