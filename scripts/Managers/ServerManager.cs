@@ -18,19 +18,17 @@ public partial class ServerManager : SingletonNode<ServerManager>
     public event EventHandler<PeerEventArgs> PeerConnectedEvent;
     public event EventHandler<PeerEventArgs> PeerDisconnectedEvent;
 
+    public event EventHandler<PeerEventArgs> LevelLoadedEvent;
+
     #endregion
 
-    private bool _isGameLiftServer;
-
-    public bool IsServer => Multiplayer.IsServer();
-
-    private bool _isServer;
-
-    public bool IsActualServer => _isServer;
+    public bool IsServer => Multiplayer.MultiplayerPeer == null ? false : Multiplayer.IsServer();
 
     private bool _isDedicatedServer;
 
     public bool IsDedicatedServer => _isDedicatedServer;
+
+    private bool _isGameLiftServer;
 
     #region Godot Lifecycle
 
@@ -41,7 +39,9 @@ public partial class ServerManager : SingletonNode<ServerManager>
         // give the server it's own API so we can run a parallel client
         // per https://github.com/godotengine/godot/issues/80604 custom multiplayer should be set in _enter_tree
         GD.Print($"Creating custom server multiplayer API at {GetPath()}");
-        GetTree().SetMultiplayer(MultiplayerApi.CreateDefaultInterface(), GetPath());
+        var api = MultiplayerApi.CreateDefaultInterface();
+        api.MultiplayerPeer = null; // clear the default "offline" peer
+        GetTree().SetMultiplayer(api, GetPath());
     }
 
     public override void _ExitTree()
@@ -144,7 +144,6 @@ public partial class ServerManager : SingletonNode<ServerManager>
         Multiplayer.PeerConnected += OnPeerConnected;
         Multiplayer.PeerDisconnected += OnPeerDisconnected;
 
-        _isServer = true;
         _isDedicatedServer = isDedicatedServer;
 
         return true;
@@ -152,9 +151,12 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     public void StopServer()
     {
+        if(Multiplayer.MultiplayerPeer == null) {
+            return;
+        }
+
         GD.Print("Stopping game server ...");
 
-        _isServer = false;
         _isDedicatedServer = false;
 
         Multiplayer.PeerConnected -= OnPeerConnected;
@@ -176,6 +178,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
     public void LevelLoaded(long id)
     {
         GD.Print($"Client {id} says level loaded");
+
+        LevelLoadedEvent?.Invoke(this, new PeerEventArgs { Id = id });
     }
 
     #endregion

@@ -18,7 +18,7 @@ public partial class ClientManager : SingletonNode<ClientManager>
 
     #endregion
 
-    public int UniqueId => Multiplayer.GetUniqueId();
+    public int UniqueId => Multiplayer.MultiplayerPeer == null ? 0 : Multiplayer.GetUniqueId();
 
     #region Godot Lifecycle
 
@@ -29,7 +29,9 @@ public partial class ClientManager : SingletonNode<ClientManager>
         // give the client it's own API to make RPCs work with the custom API server
         // per https://github.com/godotengine/godot/issues/80604 custom multiplayer should be set in _enter_tree
         GD.Print($"Creating custom client multiplayer API at {GetPath()}");
-        GetTree().SetMultiplayer(MultiplayerApi.CreateDefaultInterface(), GetPath());
+        var api = MultiplayerApi.CreateDefaultInterface();
+        api.MultiplayerPeer = null; // clear the default "offline" peer
+        GetTree().SetMultiplayer(api, GetPath());
     }
 
     public override void _ExitTree()
@@ -74,6 +76,10 @@ public partial class ClientManager : SingletonNode<ClientManager>
 
     public void Disconnect(bool silent = false)
     {
+        if(Multiplayer.MultiplayerPeer == null) {
+            return;
+        }
+
         if(!silent) {
             GD.Print("Disconnecting from game session ...");
         }

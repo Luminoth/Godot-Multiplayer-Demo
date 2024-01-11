@@ -19,8 +19,6 @@ public partial class GameManager : SingletonNode<GameManager>
     [Export]
     private PackedScene _levelScene;
 
-    public bool IsActualMultiplayerAuthority => ServerManager.Instance.IsActualServer || ClientManager.Instance.IsMultiplayerAuthority();
-
     #region Godot Lifecycle
 
     public override void _ExitTree()
@@ -70,7 +68,7 @@ public partial class GameManager : SingletonNode<GameManager>
 
     private void OnPeerConnected(object sender, ServerManager.PeerEventArgs e)
     {
-        GD.Print($"Player {e.Id} connected, signaling to load level");
+        GD.Print($"Client {e.Id} connected, signaling load level");
 
         ServerManager.Instance.RpcId(e.Id, nameof(ServerManager.Instance.LoadLevel));
     }

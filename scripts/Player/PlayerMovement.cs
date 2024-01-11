@@ -5,31 +5,24 @@ public partial class PlayerMovement : CharacterBody3D
     [Export]
     private float _speed = 5.0f;
 
-    private Vector2 _direction;
+    private Player _player;
 
     #region Godot Lifecycle
 
-    public override void _Ready()
+    public override void _EnterTree()
     {
-        SetProcess(GetMultiplayerAuthority() == ClientManager.Instance.UniqueId);
-    }
-
-    public override void _Process(double delta)
-    {
-        _direction = Input.GetVector("move_left", "move_right", "move_forward", "move_back");
+        _player = GetParent<Player>();
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        Velocity = new Vector3(_direction.X * _speed, Velocity.Y, _direction.Y * 0.0f);
+        var direction = _player.Input.Direction;
+
+        GD.Print($"Player {_player.ClientId} moves {direction}");
+
+        Velocity = new Vector3(direction.X * _speed, Velocity.Y, direction.Y * 0.0f);
         MoveAndSlide();
     }
 
     #endregion
-
-    public void SetClientId(long id)
-    {
-        SetMultiplayerAuthority((int)id);
-        SetProcess(GetMultiplayerAuthority() == ClientManager.Instance.UniqueId);
-    }
 }

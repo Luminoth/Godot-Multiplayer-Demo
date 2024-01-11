@@ -10,11 +10,12 @@ public partial class JoiningGame : Node
     [Export]
     private PackedScene _levelScene;
 
+    private bool _joiningLocal;
+
     #region Godot Lifecycle
 
     public override void _ExitTree()
     {
-        ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToLocalServer;
         ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToServer;
         ClientManager.Instance.ConnectionFailedEvent -= OnConnectionFailed;
         ClientManager.Instance.LoadLevelEvent -= OnLoadLevel;
@@ -24,14 +25,18 @@ public partial class JoiningGame : Node
 
     public void JoinLocalGameSession()
     {
-        ClientManager.Instance.ConnectedToServerEvent += OnConnectedToLocalServer;
+        _joiningLocal = true;
+
+        ClientManager.Instance.ConnectedToServerEvent += OnConnectedToServer;
         ClientManager.Instance.ConnectionFailedEvent += OnConnectionFailed;
-        // don't listen for level load events, the local server will do that for us
+        ClientManager.Instance.LoadLevelEvent += OnLoadLevel;
         ClientManager.Instance.BeginJoinLocalGameSession();
     }
 
     public void JoinGameSession(string address)
     {
+        _joiningLocal = false;
+
         ClientManager.Instance.ConnectedToServerEvent += OnConnectedToServer;
         ClientManager.Instance.ConnectionFailedEvent += OnConnectionFailed;
         ClientManager.Instance.LoadLevelEvent += OnLoadLevel;
@@ -39,16 +44,6 @@ public partial class JoiningGame : Node
     }
 
     #region Event Handlers
-
-    private void OnConnectedToLocalServer(object sender, EventArgs e)
-    {
-        ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToLocalServer;
-        ClientManager.Instance.ConnectionFailedEvent -= OnConnectionFailed;
-
-        GD.Print("Connected to local server!");
-
-        QueueFree();
-    }
 
     private void OnConnectedToServer(object sender, EventArgs e)
     {
@@ -60,7 +55,6 @@ public partial class JoiningGame : Node
 
     private void OnConnectionFailed(object sender, EventArgs e)
     {
-        ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToLocalServer;
         ClientManager.Instance.ConnectedToServerEvent -= OnConnectedToServer;
         ClientManager.Instance.ConnectionFailedEvent -= OnConnectionFailed;
         ClientManager.Instance.ConnectionFailedEvent -= OnLoadLevel;
@@ -75,12 +69,18 @@ public partial class JoiningGame : Node
 
     private void OnLoadLevel(object sender, EventArgs args)
     {
-        GD.Print("Client loading level ...");
-
         ClientManager.Instance.LoadLevelEvent -= OnLoadLevel;
 
-        var scene = _levelScene.Instantiate();
-        ClientManager.Instance.AddChild(scene);
+        if(_joiningLocal) {
+            // TODO: duplicated in Level.cs
+            GD.Print("Client signaling level loaded");
+            ClientManager.Instance.Rpc(nameof(ClientManager.Instance.LevelLoaded), ClientManager.Instance.UniqueId);
+        } else {
+            GD.Print("Client loading level ...");
+
+            var scene = _levelScene.Instantiate();
+            ClientManager.Instance.AddChild(scene);
+        }
 
         QueueFree();
     }
