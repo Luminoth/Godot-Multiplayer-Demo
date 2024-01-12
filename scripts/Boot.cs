@@ -10,7 +10,7 @@ public partial class Boot : Node
     public override void _Process(double delta)
     {
         var args = OS.GetCmdlineArgs();
-        if(args.Contains("--dedicated")) {
+        if(args.Contains("--dedicated") || args.Contains("--gamelift")) {
             GD.Print("Starting dedicated server ...");
 
             var scene = _dedicatedScene.Instantiate();

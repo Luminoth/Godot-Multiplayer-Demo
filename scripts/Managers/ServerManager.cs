@@ -2,6 +2,7 @@ using Godot;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 using Aws.GameLift.Server;
 using Aws.GameLift.Server.Model;
@@ -75,6 +76,9 @@ public partial class ServerManager : SingletonNode<ServerManager>
         if(initSDKOutcome.Success) {
             _isGameLiftServer = true;
 
+            var logPath = Path.GetDirectoryName(EngineManager.Instance.LogPath);
+            GD.Print($"Adding log path {logPath}");
+
             var processParameters = new ProcessParameters(
                 // OnStartGameSession
                 (GameSession gameSession) => {
@@ -103,11 +107,10 @@ public partial class ServerManager : SingletonNode<ServerManager>
                     return true;
                 },
                 port,
-                new LogParameters(new List<string>()
-                {
-                    // TODO:
-                    "/local/game/logs/myserver.log"
-                }));
+                new LogParameters(new List<string>() {
+                    logPath,
+                })
+            );
 
             var processReadyOutcome = GameLiftServerAPI.ProcessReady(processParameters);
             if(processReadyOutcome.Success) {
