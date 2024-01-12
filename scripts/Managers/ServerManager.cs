@@ -72,13 +72,28 @@ public partial class ServerManager : SingletonNode<ServerManager>
     {
         GD.Print("Starting GameLift game server ...");
 
-        // TODO: pass all this garbage in and ONLY if running with Anywhere
-        var webSocketUrl = "wss://us-west-2.api.amazongamelift.com";
-        var processId = "myProcess";
-        var hostId = "myHost";
-        var fleetId = "myFleet";
-        var authToken = "myAuthToken";
-        var serverParameters = new ServerParameters(webSocketUrl, processId, hostId, fleetId, authToken);
+        var serverParameters = new ServerParameters();
+        /*if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out object webSocketUrl)) {
+            serverParameters.WebSocketUrl = (string)webSocketUrl;
+        }
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out object processId)) {
+            serverParameters.ProcessId = (string)processId;
+        }
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out object hostId)) {
+            serverParameters.HostId = (string)hostId;
+        }
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out object fleetId)) {
+            serverParameters.FleetId = (string)fleetId;
+        }
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out object authToken)) {
+            serverParameters.AuthToken = (string)authToken;
+        }*/
+        serverParameters.WebSocketUrl = "wss://us-west-2.api.amazongamelift.com";
+        serverParameters.ProcessId = "myProcess";
+        serverParameters.HostId = "myHost";
+        serverParameters.FleetId = "myFleet";
+        serverParameters.AuthToken = "myAuthToken";
+
 
         var initSDKOutcome = GameLiftServerAPI.InitSDK(serverParameters);
         if(initSDKOutcome.Success) {

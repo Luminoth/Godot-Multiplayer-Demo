@@ -1,5 +1,3 @@
-using System.Linq;
-
 using Godot;
 
 public partial class Boot : Node
@@ -9,8 +7,7 @@ public partial class Boot : Node
 
     public override void _Process(double delta)
     {
-        var args = OS.GetCmdlineArgs();
-        if(args.Contains("--dedicated") || args.Contains("--gamelift")) {
+        if(EngineManager.Instance.CommandLineArgs.ContainsKey("--dedicated") || EngineManager.Instance.CommandLineArgs.ContainsKey("--gamelift")) {
             GD.Print("Starting dedicated server ...");
 
             var scene = _dedicatedScene.Instantiate();
