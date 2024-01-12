@@ -73,20 +73,20 @@ public partial class ServerManager : SingletonNode<ServerManager>
         GD.Print("Starting GameLift game server ...");
 
         var serverParameters = new ServerParameters();
-        /*if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out object webSocketUrl)) {
-            serverParameters.WebSocketUrl = (string)webSocketUrl;
+        /*if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string webSocketUrl)) {
+            serverParameters.WebSocketUrl = webSocketUrl;
         }
-        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out object processId)) {
-            serverParameters.ProcessId = (string)processId;
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string processId)) {
+            serverParameters.ProcessId = processId;
         }
-        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out object hostId)) {
-            serverParameters.HostId = (string)hostId;
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string hostId)) {
+            serverParameters.HostId = hostId;
         }
-        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out object fleetId)) {
-            serverParameters.FleetId = (string)fleetId;
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string fleetId)) {
+            serverParameters.FleetId = fleetId;
         }
-        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out object authToken)) {
-            serverParameters.AuthToken = (string)authToken;
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string authToken)) {
+            serverParameters.AuthToken = authToken;
         }*/
         serverParameters.WebSocketUrl = "wss://us-west-2.api.amazongamelift.com";
         serverParameters.ProcessId = "myProcess";
