@@ -18,6 +18,9 @@ public partial class ClientManager : SingletonNode<ClientManager>
 
     #endregion
 
+    [Export]
+    private ENetConnection.CompressionMode _compressionMode = ENetConnection.CompressionMode.RangeCoder;
+
     public int UniqueId => Multiplayer.MultiplayerPeer == null ? 0 : Multiplayer.GetUniqueId();
 
     #region Godot Lifecycle
@@ -66,6 +69,8 @@ public partial class ClientManager : SingletonNode<ClientManager>
             OnConnectionFailed();
             return;
         }
+
+        peer.Host.Compress(_compressionMode);
 
         Multiplayer.MultiplayerPeer = peer;
 

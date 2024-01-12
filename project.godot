@@ -19,8 +19,8 @@ config/icon="res://icon.svg"
 
 EngineManager="*res://scripts/Managers/EngineManager.cs"
 UiManager="*res://scenes/managers/UIManager.tscn"
-ServerManager="*res://scripts/Managers/ServerManager.cs"
-ClientManager="*res://scripts/Managers/ClientManager.cs"
+ServerManager="*res://scenes/managers/ServerManager.tscn"
+ClientManager="*res://scenes/managers/ClientManager.tscn"
 GameManager="*res://scenes/managers/GameManager.tscn"
 
 [dotnet]

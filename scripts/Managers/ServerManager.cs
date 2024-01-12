@@ -22,6 +22,9 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #endregion
 
+    [Export]
+    private ENetConnection.CompressionMode _compressionMode = ENetConnection.CompressionMode.RangeCoder;
+
     public bool IsServer => Multiplayer.MultiplayerPeer == null ? false : Multiplayer.IsServer();
 
     private bool _isDedicatedServer;
@@ -138,6 +141,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
             GD.PrintErr($"Failed to create server: {result}");
             return false;
         }
+
+        peer.Host.Compress(_compressionMode);
 
         Multiplayer.MultiplayerPeer = peer;
 
