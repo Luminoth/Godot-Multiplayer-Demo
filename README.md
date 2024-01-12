@@ -20,6 +20,21 @@
   * bin/Release/net462/GameLiftServerSDK.dll
   * bin/Release/net462/log4net.dll
   * bin/Release/net462/websocket-sharp-core.dll
-  * Add ItemGroup with GameLiftServerSDK, log4net, and websocket-sharp-core to .csproj
+  * bin/Release/net462/Polly.dll
+  * Add ItemGroup with dependencies to .csproj
 * Add ConfigurationManager NuGet package (for log4net)
   * dotnet add package System.Configuration.ConfigurationManager
+
+## Testing Locally (?old?)
+
+* Test using GameLiftLocal
+  * https://docs.aws.amazon.com/gamelift/latest/developerguide/integration-testing-local.html
+  * java -jar GameLiftLocal.jar
+    * Can override the port here if necessary, defaults to 8080
+  * aws gamelift describe-game-sessions --endpoint-url http://localhost:8080 --fleet-id fleet-123
+  * aws gamelift create-game-session --endpoint-url http://localhost:8080 --maximum-player-session-count 2 --fleet-id fleet-123
+  * aws gamelift describe-instances --endpoint-url http://localhost:8080 --fleet-id fleet-123
+
+## Testing Locally (Anywhere)
+
+* https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-creating-anywhere.html

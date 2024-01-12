@@ -17,6 +17,9 @@
     <Reference Include="websocket-sharp-core">
       <HintPath>websocket-sharp-core.dll</HintPath>
     </Reference>
+    <Reference Include="Polly">
+      <HintPath>Polly.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

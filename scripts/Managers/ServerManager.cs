@@ -72,8 +72,18 @@ public partial class ServerManager : SingletonNode<ServerManager>
     {
         GD.Print("Starting GameLift game server ...");
 
-        var initSDKOutcome = GameLiftServerAPI.InitSDK();
+        // TODO: pass all this garbage in and ONLY if running with Anywhere
+        var webSocketUrl = "wss://us-west-2.api.amazongamelift.com";
+        var processId = "myProcess";
+        var hostId = "myHost";
+        var fleetId = "myFleet";
+        var authToken = "myAuthToken";
+        var serverParameters = new ServerParameters(webSocketUrl, processId, hostId, fleetId, authToken);
+
+        var initSDKOutcome = GameLiftServerAPI.InitSDK(serverParameters);
         if(initSDKOutcome.Success) {
+            GD.Print("InitSDK success, readying ...");
+
             _isGameLiftServer = true;
 
             var logPath = Path.GetDirectoryName(EngineManager.Instance.LogPath);
@@ -86,6 +96,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
                     // TODO: what if this fails?
                     StartServer(port, maxPlayers, true);
+
+                    // TODO: need to setup server callbacks
 
                     GameLiftServerAPI.ActivateGameSession();
                 },
