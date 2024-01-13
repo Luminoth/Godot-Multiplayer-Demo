@@ -16,6 +16,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
 
     #region Events
 
+    public event EventHandler<EventArgs> ServerStartedEvent;
+
     public event EventHandler<PeerEventArgs> PeerConnectedEvent;
     public event EventHandler<PeerEventArgs> PeerDisconnectedEvent;
 
@@ -72,28 +74,32 @@ public partial class ServerManager : SingletonNode<ServerManager>
     {
         GD.Print("Starting GameLift game server ...");
 
+        bool anywhere = false;
         var serverParameters = new ServerParameters();
-        /*if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string webSocketUrl)) {
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string webSocketUrl)) {
             serverParameters.WebSocketUrl = webSocketUrl;
+            anywhere = true;
         }
-        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string processId)) {
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("processId", out string processId)) {
             serverParameters.ProcessId = processId;
+            anywhere = true;
         }
-        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string hostId)) {
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("hostId", out string hostId)) {
             serverParameters.HostId = hostId;
+            anywhere = true;
         }
-        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string fleetId)) {
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("fleetId", out string fleetId)) {
             serverParameters.FleetId = fleetId;
+            anywhere = true;
         }
-        if(EngineManager.Instance.CommandLineArgs.TryGetValue("webSocketUrl", out string authToken)) {
+        if(EngineManager.Instance.CommandLineArgs.TryGetValue("authToken", out string authToken)) {
             serverParameters.AuthToken = authToken;
-        }*/
-        serverParameters.WebSocketUrl = "wss://us-west-2.api.amazongamelift.com";
-        serverParameters.ProcessId = "myProcess";
-        serverParameters.HostId = "myHost";
-        serverParameters.FleetId = "myFleet";
-        serverParameters.AuthToken = "myAuthToken";
+            anywhere = true;
+        }
 
+        if(anywhere) {
+            GD.Print($"Registering as Anywhere server processId={processId} hostId={hostId} fleetId={fleetId}");
+        }
 
         var initSDKOutcome = GameLiftServerAPI.InitSDK(serverParameters);
         if(initSDKOutcome.Success) {
@@ -180,6 +186,8 @@ public partial class ServerManager : SingletonNode<ServerManager>
         Multiplayer.PeerDisconnected += OnPeerDisconnected;
 
         _isDedicatedServer = isDedicatedServer;
+
+        ServerStartedEvent?.Invoke(this, EventArgs.Empty);
 
         return true;
     }

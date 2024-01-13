@@ -1,3 +1,5 @@
+using System;
+
 using Godot;
 
 public partial class GameManager : SingletonNode<GameManager>
@@ -28,6 +30,7 @@ public partial class GameManager : SingletonNode<GameManager>
 
     public override void _ExitTree()
     {
+        ServerManager.Instance.ServerStartedEvent -= OnServerStarted;
         ServerManager.Instance.PeerConnectedEvent -= OnPeerConnected;
 
         base._ExitTree();
@@ -37,39 +40,40 @@ public partial class GameManager : SingletonNode<GameManager>
 
     public bool StartLocalServer()
     {
+        ServerManager.Instance.ServerStartedEvent += OnServerStarted;
+
         if(!ServerManager.Instance.StartLocalServer(ListenPort, MaxPlayers)) {
             GD.PrintErr("Failed to start local game server");
             return false;
         }
-
-        FinishStartServer();
 
         return true;
     }
 
     public bool StartDedicatedServer(bool useGameLift)
     {
+        ServerManager.Instance.ServerStartedEvent += OnServerStarted;
+
         if(!ServerManager.Instance.StartDedicatedServer(ListenPort, MaxPlayers, useGameLift)) {
             GD.PrintErr("Failed to start dedicated game server");
             return false;
         }
 
-        FinishStartServer();
-
         return true;
     }
 
-    private void FinishStartServer()
+    #region Event Handlers
+
+    private void OnServerStarted(object sender, EventArgs args)
     {
+        ServerManager.Instance.ServerStartedEvent -= OnServerStarted;
         ServerManager.Instance.PeerConnectedEvent += OnPeerConnected;
 
-        GD.Print("Server loading level ...");
+        GD.Print("Server started, loading level ...");
 
         var scene = _levelScene.Instantiate();
         ServerManager.Instance.AddChild(scene);
     }
-
-    #region Event Handlers
 
     private void OnPeerConnected(object sender, ServerManager.PeerEventArgs e)
     {

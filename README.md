@@ -21,9 +21,12 @@
   * bin/Release/net462/log4net.dll
   * bin/Release/net462/websocket-sharp-core.dll
   * bin/Release/net462/Polly.dll
+  * bin/Release/net462/Newtonsoft.Json.dll
   * Add ItemGroup with dependencies to .csproj
 * Add ConfigurationManager NuGet package (for log4net)
   * dotnet add package System.Configuration.ConfigurationManager
+* Add Security Permissions NuGet package (for Newtonsoft.Json)
+  * dotnet add package System.Security.Permissions
 
 ## Testing Locally (?old?)
 
