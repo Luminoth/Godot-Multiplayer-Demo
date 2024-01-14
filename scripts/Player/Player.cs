@@ -9,6 +9,7 @@ public partial class Player : Node
 
     private long _clientId;
 
+    // sync'd server -> client
     [Export]
     public long ClientId
     {

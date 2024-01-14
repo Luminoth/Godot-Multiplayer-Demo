@@ -2,6 +2,8 @@ using Godot;
 
 public partial class PlayerMovement : CharacterBody3D
 {
+    // position / rotation sync'd server -> client
+
     [Export]
     private float _speed = 5.0f;
 
@@ -14,6 +16,7 @@ public partial class PlayerMovement : CharacterBody3D
         _player = GetParent<Player>();
     }
 
+    // both client and server run physics
     public override void _PhysicsProcess(double delta)
     {
         var direction = _player.Input.Direction;

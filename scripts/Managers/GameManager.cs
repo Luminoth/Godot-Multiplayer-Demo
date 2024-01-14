@@ -72,7 +72,8 @@ public partial class GameManager : SingletonNode<GameManager>
         GD.Print("Server started, loading level ...");
 
         var scene = _levelScene.Instantiate();
-        ServerManager.Instance.AddChild(scene);
+        //ServerManager.Instance.AddChild(scene);
+        GetTree().Root.AddChild(scene);
     }
 
     private void OnPeerConnected(object sender, ServerManager.PeerEventArgs e)

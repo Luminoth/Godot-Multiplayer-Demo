@@ -73,7 +73,8 @@ public partial class JoiningGame : Node
             GD.Print("Client loading level ...");
 
             var scene = GameManager.Instance.LevelScene.Instantiate();
-            ClientManager.Instance.AddChild(scene);
+            //ClientManager.Instance.AddChild(scene);
+            GetTree().Root.AddChild(scene);
         }
 
         QueueFree();
