@@ -1,8 +1,16 @@
 * https://godotengine.org/article/multiplayer-in-godot-4-0-scene-replication/
 * https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html
 * https://www.youtube.com/watch?v=_ItA2r69c-Q
+  * High level multiplayer
 * https://www.youtube.com/watch?v=e0JLO_5UgQo
+  * Basic multiplayer
 * https://github.com/zwometer/Godot4MultiplayerMVP
+* https://github.com/LudiDorici/gd-custom-multiplayer
+  * This is very old tho, not likely reliable
+* https://www.youtube.com/watch?v=zWjFEVAkz3w
+  * LAN browser
+* https://www.youtube.com/watch?v=lpkaMKE081M
+  * LAN shooter (a few years old tho)
 
 # GameLift SDK
 
